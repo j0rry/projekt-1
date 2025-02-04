@@ -1,39 +1,29 @@
 ﻿using System.Text.Json;
+using Raylib_cs;
 
 
 class Program
 {
-
-    const string path = "items.json";
     static void Main()
     {
+        Player p = new Player {x = 100, y = 100};
 
-        List<Item> items = new List<Item>();
-        ReadData(ref items);
-        SaveData(items);
+        const int screenWidth = 800;
+        const int screenHeight = 600;
 
-        items.ForEach(item => System.Console.WriteLine(item.Name));
+        Raylib.InitWindow(screenWidth, screenHeight, "Sigma game");
 
-        Console.ReadLine();
-    }
+        Raylib.SetTargetFPS(60);
 
-    static void ReadData(ref List<Item> items){
-        if(File.Exists(path)){
-            string jsonString = File.ReadAllText(path);
-            items = JsonSerializer.Deserialize<List<Item>>(jsonString) ?? new List<Item>();
-        } else {
-            items = new List<Item>
-            {
-                new Item { Name = "Sword", Tag = "weapon" },
-                new Item { Name = "Key", Tag = "key" }
-            };
-            
-            SaveData(items);
+        // Spel loop
+        while (!Raylib.WindowShouldClose())
+        {
+            Raylib.BeginDrawing();
+            Raylib.ClearBackground(Color.Green);
+            p.Draw();
+            Raylib.EndDrawing();
         }
-    }
-    static void SaveData(List<Item> items){
-        var options = new JsonSerializerOptions { WriteIndented = true };
-        string jsonString = JsonSerializer.Serialize(items, options);
-        File.WriteAllText(path, jsonString);
+
+        Raylib.CloseWindow();
     }
 }
